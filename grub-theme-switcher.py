@@ -9,10 +9,13 @@ if os.geteuid() != 0:
 themes = os.listdir("/boot/grub/themes")
 themes.sort(key=casefold_sort)
 
-with open("/etc/default/grub.d/10-theme.cfg", "r") as config:
-    config_file = config.read()
-    split_config = config_file.split("/")
-    current_theme = split_config[4]
+try:
+    with open("/etc/default/grub.d/10-theme.cfg", "r") as config:
+        config_file = config.read()
+        split_config = config_file.split("/")
+        current_theme = split_config[4]
+except:
+    exit("/etc/default/grub.d does not exist or has no configuration file inside.")
 
 print("These are the available themes:")
 for i in range(len(themes)):
