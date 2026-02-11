@@ -1,0 +1,33 @@
+import os
+
+def casefold_sort(i):
+    return i.casefold()
+
+if os.geteuid() != 0:
+    exit("You need root to update your themes!")
+
+themes = os.listdir("/boot/grub/themes")
+themes.sort(key=casefold_sort)
+
+with open("/etc/default/grub.d/10-theme.cfg", "r") as config:
+    config_file = config.read()
+    split_config = config_file.split("/")
+    current_theme = split_config[4]
+
+print("These are the available themes:")
+for i in range(len(themes)):
+    if themes[i] == current_theme:
+        print(f"{i+1}) {themes[i]} [Installed]")
+    else:
+        print(f"{i+1}) {themes[i]}")
+selected_theme = int(input("Select a theme to install: ")) - 1
+
+while selected_theme >= len(themes) or selected_theme < 0:
+    selected_theme = int(input("Invalid theme number. Try again: ")) - 1
+while themes[selected_theme] == current_theme:
+    selected_theme = int(input(f"{current_theme} is already installed! Select another one: ")) - 1
+
+with open("/etc/default/grub.d/10-theme.cfg", "w") as config:
+    config.write(f"GRUB_THEME=\"/boot/grub/themes/{themes[selected_theme]}/theme.txt\"\n")
+
+os.execlp("grub-mkconfig", "grub-mkconfig", "-o", "/boot/grub/grub.cfg")
