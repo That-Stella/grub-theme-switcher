@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]; then
+	echo "You need root to update your themes!"
+	exit 1
+fi
+
 themes=(/boot/grub/themes/*/)
 themes=("${themes[@]%/}")
 themes=("${themes[@]##*/}")
@@ -10,6 +15,11 @@ for (( i = 0; i < ${#themes[@]}; i++)); do
 done
 read -p "Select a theme to install: " selected_theme
 selected_theme=$(($selected_theme - 1))
+
+until [[ $selected_theme -le $((${#themes[@]}-1)) ]] || [[ $selected_theme -ge 0 ]]; do
+	read -p "Invalid theme number. Try again: " selected_theme
+	selected_theme=$(($selected_theme - 1))
+done
 
 echo "You selected ${themes[$selected_theme]}"
 
