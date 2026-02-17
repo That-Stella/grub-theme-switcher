@@ -16,7 +16,7 @@ done
 read -p "Select a theme to install: " selected_theme
 selected_theme=$(($selected_theme - 1))
 
-until [[ $selected_theme -le $((${#themes[@]}-1)) ]] || [[ $selected_theme -ge 0 ]]; do
+while [[ $selected_theme -gt $((${#themes[@]}-1)) ]] || [[ $selected_theme -lt 0 ]]; do
 	read -p "Invalid theme number. Try again: " selected_theme
 	selected_theme=$(($selected_theme - 1))
 done
