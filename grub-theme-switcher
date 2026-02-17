@@ -22,8 +22,12 @@ done
 read -p "Select a theme to install: " selected_theme
 selected_theme=$(($selected_theme - 1))
 
-while [[ $selected_theme -gt $((${#themes[@]}-1)) ]] || [[ $selected_theme -lt 0 ]]; do
-	read -p "Invalid theme number. Try again: " selected_theme
+while [[ $selected_theme -gt $((${#themes[@]}-1)) ||  $selected_theme -lt 0 ]] || [[ "$installed_theme" =~ "${themes[$selected_theme]}" ]]; do
+	if [[ "$installed_theme" =~ "${themes[$selected_theme]}" && -n "${themes[$selected_theme]}" ]]; then
+		read -p "Theme is already installed! Try again: " selected_theme
+	else
+		read -p "Invalid theme number. Try again: " selected_theme
+	fi
 	selected_theme=$(($selected_theme - 1))
 done
 
