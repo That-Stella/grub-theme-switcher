@@ -31,10 +31,11 @@ for i in range(len(themes)):
         print(f"{i+1}) {themes[i]}")
 selected_theme = int(input("Select a theme to install: ")) - 1
 
-while selected_theme >= len(themes) or selected_theme < 0:
-    selected_theme = int(input("Invalid theme number. Try again: ")) - 1
-while themes[selected_theme] == current_theme:
-    selected_theme = int(input(f"{current_theme} is already installed! Select another one: ")) - 1
+while selected_theme >= len(themes) or selected_theme < 0 or themes[selected_theme] == current_theme:
+    if selected_theme >= len(themes) or selected_theme < 0:
+        selected_theme = int(input("Invalid theme number. Try again: ")) - 1
+    else:
+        selected_theme = int(input(f"{current_theme} is already installed! Select another one: ")) - 1
 
 sed_command = f"s|GRUB_THEME=.*|GRUB_THEME=\"/boot/grub/themes/{themes[selected_theme]}/theme.txt\"\\n|"
 fork = os.fork()
