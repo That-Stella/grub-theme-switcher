@@ -9,9 +9,15 @@ themes=(/boot/grub/themes/*/)
 themes=("${themes[@]%/}")
 themes=("${themes[@]##*/}")
 
+installed_theme=$(grep GRUB_THEME=* /etc/default/grub)
+
 echo "These are the available themes:"
 for (( i = 0; i < ${#themes[@]}; i++)); do
-	echo "$((i+1))) ${themes[i]}"
+	if [[ "$installed_theme" =~ "${themes[i]}" ]]; then
+		echo "$((i+1))) ${themes[i]} [Installed]"
+	else
+		echo "$((i+1))) ${themes[i]}"
+	fi
 done
 read -p "Select a theme to install: " selected_theme
 selected_theme=$(($selected_theme - 1))
